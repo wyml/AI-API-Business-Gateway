@@ -17,10 +17,11 @@ async def get_redis_client() -> Redis:
     return _redis_client
 
 
-async def check_rate_limit(key: str, limit: int = 60, window_seconds: int = 60) -> bool:
-    """Simple rate limit placeholder using Redis INCR/EXPIRE."""
+async def check_rate_limit(api_key: str, limit: int = 60, window_seconds: int = 60) -> bool:
+    """Rate limit per API key using Redis INCR/EXPIRE."""
     redis_client = await get_redis_client()
-    current = await redis_client.incr(key)
+    redis_key = f"rate_limit:{api_key}"
+    current = await redis_client.incr(redis_key)
     if current == 1:
-        await redis_client.expire(key, window_seconds)
+        await redis_client.expire(redis_key, window_seconds)
     return current <= limit
