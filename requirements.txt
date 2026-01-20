@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+httpx
+sqlalchemy[asyncio]
+asyncpg
+pydantic-settings
+redis
+stripe
